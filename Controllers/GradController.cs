@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices.ComTypes;
+using Task = GradAndInternship.Models.Task;
 
 namespace GradAndInternship.Controllers
 {
@@ -18,44 +19,71 @@ namespace GradAndInternship.Controllers
         [HttpGet("Proposal")]
         public IActionResult Proposal()
         {
-            var data = db.ProjectDetails.ToList();
+            var data = db.ProjectDetails.Include(x=>x.Student).Where(x=>x.DoctorId==new Guid("AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")).ToList();
             return Ok(data);
         }
 
+        [HttpGet("Proposal-Get-By-Id/{stdNum}")]
+        public IActionResult ProposalGetById(string stdNum)
+        {
+            var data = db.ProjectDetails.Include(x => x.Student).Where(x => x.Student.FirstOrDefault().StudentNumber == stdNum).ToList();
+            return Ok(data);
+        }
+        [HttpPut("Proposal-Update-Status/{stdNum}")]
+        public async Task< IActionResult> ProposalUpdateStatus(string stdNum , UpdateStatusProposal model)
+        {
+            var data = await  db.ProjectDetails.Include(x => x.Student).Where(x => x.Student.FirstOrDefault().StudentNumber == stdNum).FirstOrDefaultAsync();
+            data.Status = model.status;
+            if (model.status == 2)
+            {
+                data.StatusDetails = model.details ?? "";
+            }
+            else if (model.status == 1)
+            {
+                data.StatusDetails =  "Accepted";
+            }
+            else
+            {
+                data.StatusDetails =  "rejected";
+            }
+
+            db.SaveChanges();
+            return Ok(data);
+        }
 
         #region testCase
         //{
-            //"students": [
-            //{
-            //    "name": "Bob Smith",
-            //    "number": "CS1002"
-            //},
-            //{
-            //    "name": "Alice Johnson",
-            //    "number": "CS1001"
-            //},
-            //{
-            //    "name": "George White",
-            //    "number": "CS1003"
-            //}
-            //],
-            //"doctorId": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB",
-            //"departmentId": "11111111-1111-1111-1111-111111111111",
-            //"title": "xxx",
-            //"description": "xxx",
-            //"number": "xx",
-            //"objective": "xx",
-            //"timeLine": "xxx",
-            //"tasks": [
-            //{
-            //    "title": "string",
-            //    "description": "string",
-            //    "starTime": "2025-04-05T20:37:49.680Z",
-            //    "endTime": "2025-04-05T20:37:49.680Z"
-            //}
-            //]
-       // }
-        
+        //"students": [
+        //{
+        //    "name": "Bob Smith",
+        //    "number": "CS1002"
+        //},
+        //{
+        //    "name": "Alice Johnson",
+        //    "number": "CS1001"
+        //},
+        //{
+        //    "name": "George White",
+        //    "number": "CS1003"
+        //}
+        //],
+        //"doctorId": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB",
+        //"departmentId": "11111111-1111-1111-1111-111111111111",
+        //"title": "xxx",
+        //"description": "xxx",
+        //"number": "xx",
+        //"objective": "xx",
+        //"timeLine": "xxx",
+        //"tasks": [
+        //{
+        //    "title": "string",
+        //    "description": "string",
+        //    "starTime": "2025-04-05T20:37:49.680Z",
+        //    "endTime": "2025-04-05T20:37:49.680Z"
+        //}
+        //]
+        // }
+
 
         #endregion
 
@@ -167,6 +195,7 @@ namespace GradAndInternship.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             return File(fileBytes, "application/octet-stream", fileName.PathDocument);
         }
+       
 
 
 
@@ -212,6 +241,16 @@ namespace GradAndInternship.Controllers
         {
             var data = db.Appointments
                 .Where(x => x.StudentId == new Guid("66666666-6666-6666-6666-666666666666"))
+                .Include(x => x.Student).ThenInclude(x => x.Project).ThenInclude(x => x.Doctor).ToList();
+                
+
+            return Ok(data);
+        }
+        [HttpGet("Get-Appointment-asDoctor/{doctorId}")]
+        public async Task<IActionResult> GetAppointMent(Guid doctorId)
+        {
+            var data = db.Appointments
+                .Where(x => x.Student.Project.Doctor.Id == doctorId)
                 .Include(x => x.Student).ThenInclude(x => x.Project).ThenInclude(x => x.Doctor).ToList();
                 
 

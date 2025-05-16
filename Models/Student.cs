@@ -19,5 +19,7 @@ namespace GradAndInternship.Models
         public Guid? ProjectId { set; get; }
         public virtual ProjectDetails? Project { get; set; }
 
+
+   
     }
 }

@@ -4,6 +4,7 @@ using GradAndInternship.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GradAndInternship.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516121349_Adding-InterhsipEntity-edinting012")]
+    partial class AddingInterhsipEntityedinting012
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,12 +321,6 @@ namespace GradAndInternship.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StatusDetails")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TimeLine")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -405,7 +402,7 @@ namespace GradAndInternship.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PhaseId")
+                    b.Property<Guid>("PhaseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -534,7 +531,9 @@ namespace GradAndInternship.Migrations
                 {
                     b.HasOne("GradAndInternship.Models.Phase", "Phase")
                         .WithMany("Tasks")
-                        .HasForeignKey("PhaseId");
+                        .HasForeignKey("PhaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Phase");
                 });

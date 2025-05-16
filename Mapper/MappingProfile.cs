@@ -24,5 +24,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.StarTime, opt => opt.MapFrom(src => src.StarTime))
             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime));
 
+        CreateMap<InternshipDto, Internship>();
+        CreateMap<InternshipToDoctorDto, InternshipAcceptToDoctor>();
+
     }
 }

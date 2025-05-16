@@ -4,6 +4,7 @@ using GradAndInternship.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GradAndInternship.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516112115_Adding-InterhsipEntity")]
+    partial class AddingInterhsipEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,57 @@ namespace GradAndInternship.Migrations
                     b.ToTable("Chart");
                 });
 
+            modelBuilder.Entity("GradAndInternship.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("InternshipId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsThereItDepartment")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SuperVisor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SuperVisorJobTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InternshipId");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("GradAndInternship.Models.Department", b =>
                 {
                     b.Property<Guid>("Id")
@@ -90,32 +144,6 @@ namespace GradAndInternship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.DetailsInternshipDays", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("InternshipAcceptToDoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InternshipAcceptToDoctorId");
-
-                    b.ToTable("DetailsInternshipDays");
                 });
 
             modelBuilder.Entity("GradAndInternship.Models.Doctor", b =>
@@ -183,115 +211,17 @@ namespace GradAndInternship.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsThereItDepartment")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SemeterNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SuperVisor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SuperVisorJobTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId");
 
                     b.ToTable("Internships");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.InternshipAcceptToDoctor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfHours")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SemesterGraduate")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SemesterInternship")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TypeOfInternship")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("InternshipAcceptToDoctors");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.Phase", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("InternshipAcceptToDoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InternshipAcceptToDoctorId");
-
-                    b.ToTable("Phases");
                 });
 
             modelBuilder.Entity("GradAndInternship.Models.ProjectDetails", b =>
@@ -318,12 +248,6 @@ namespace GradAndInternship.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StatusDetails")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TimeLine")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -339,31 +263,6 @@ namespace GradAndInternship.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("ProjectDetails");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.Report", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("InternshipAcceptToDoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InternshipAcceptToDoctorId");
-
-                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("GradAndInternship.Models.Student", b =>
@@ -395,26 +294,6 @@ namespace GradAndInternship.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("GradAndInternship.Models.Task", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PhaseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhaseId");
-
-                    b.ToTable("Tasks");
-                });
-
             modelBuilder.Entity("GradAndInternship.Models.Appointment", b =>
                 {
                     b.HasOne("GradAndInternship.Models.Student", "Student")
@@ -437,11 +316,15 @@ namespace GradAndInternship.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("GradAndInternship.Models.DetailsInternshipDays", b =>
+            modelBuilder.Entity("GradAndInternship.Models.Company", b =>
                 {
-                    b.HasOne("GradAndInternship.Models.InternshipAcceptToDoctor", null)
-                        .WithMany("Scheduals")
-                        .HasForeignKey("InternshipAcceptToDoctorId");
+                    b.HasOne("GradAndInternship.Models.Internship", "Internship")
+                        .WithMany()
+                        .HasForeignKey("InternshipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Internship");
                 });
 
             modelBuilder.Entity("GradAndInternship.Models.Doctor", b =>
@@ -473,24 +356,6 @@ namespace GradAndInternship.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("GradAndInternship.Models.InternshipAcceptToDoctor", b =>
-                {
-                    b.HasOne("GradAndInternship.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.Phase", b =>
-                {
-                    b.HasOne("GradAndInternship.Models.InternshipAcceptToDoctor", null)
-                        .WithMany("Phases")
-                        .HasForeignKey("InternshipAcceptToDoctorId");
-                });
-
             modelBuilder.Entity("GradAndInternship.Models.ProjectDetails", b =>
                 {
                     b.HasOne("GradAndInternship.Models.Department", "Department")
@@ -510,13 +375,6 @@ namespace GradAndInternship.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("GradAndInternship.Models.Report", b =>
-                {
-                    b.HasOne("GradAndInternship.Models.InternshipAcceptToDoctor", null)
-                        .WithMany("Reports")
-                        .HasForeignKey("InternshipAcceptToDoctorId");
-                });
-
             modelBuilder.Entity("GradAndInternship.Models.Student", b =>
                 {
                     b.HasOne("GradAndInternship.Models.Department", null)
@@ -530,34 +388,11 @@ namespace GradAndInternship.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("GradAndInternship.Models.Task", b =>
-                {
-                    b.HasOne("GradAndInternship.Models.Phase", "Phase")
-                        .WithMany("Tasks")
-                        .HasForeignKey("PhaseId");
-
-                    b.Navigation("Phase");
-                });
-
             modelBuilder.Entity("GradAndInternship.Models.Department", b =>
                 {
                     b.Navigation("Doctors");
 
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.InternshipAcceptToDoctor", b =>
-                {
-                    b.Navigation("Phases");
-
-                    b.Navigation("Reports");
-
-                    b.Navigation("Scheduals");
-                });
-
-            modelBuilder.Entity("GradAndInternship.Models.Phase", b =>
-                {
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("GradAndInternship.Models.ProjectDetails", b =>

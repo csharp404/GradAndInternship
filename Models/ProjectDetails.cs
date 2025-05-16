@@ -11,6 +11,9 @@ public class ProjectDetails
     public string Number { set; get; }
     public string Objective { set; get; }
     public string TimeLine { set; get; }
+    public int? Status { set; get; }
+    public string? StatusDetails { set; get; }
+ 
 
     public List<Student> Student { set; get; }
 
